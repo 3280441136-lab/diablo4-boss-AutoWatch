@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sanctuary Watch</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <div class="brand-mark">SW</div>
+        <div>
+          <div class="eyebrow">SANCTUARY / WORLD BOSS</div>
+          <h1>Sanctuary Watch</h1>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span class="status-pill"><span class="status-dot"></span><span id="engine-status">后台监控中</span></span>
+        <button class="icon-button" id="refresh-button" title="刷新时间表" aria-label="刷新时间表">↻</button>
+        <button class="close-button" id="hide-button" title="隐藏到系统托盘">关闭窗口</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-grid">
+        <div class="next-panel">
+          <div class="section-kicker">NEXT WORLD BOSS</div>
+          <div class="next-heading-row">
+            <div>
+              <p class="muted-label">距离下一次刷新</p>
+              <div class="countdown" id="countdown">--:--:--</div>
+            </div>
+            <div class="live-chip"><span class="pulse"></span>LIVE</div>
+          </div>
+          <div class="next-meta"><span id="next-date">正在读取计划</span><span class="meta-separator">·</span><span id="next-zone">本机时间</span></div>
+          <div class="next-divider"></div>
+          <div class="boss-identity">
+            <div class="boss-emblem" id="boss-emblem">A</div>
+            <div>
+              <div class="boss-name" id="boss-name">载入中</div>
+              <div class="boss-english" id="boss-english">Loading schedule</div>
+            </div>
+            <div class="boss-tone" id="boss-tone">—</div>
+          </div>
+          <div class="reminder-summary">
+            <div class="summary-icon">◷</div>
+            <div><strong id="reminder-text">提醒已开启</strong><span>30 分钟 / 15 分钟各提醒一次</span></div>
+          </div>
+        </div>
+
+        <div class="art-panel" id="art-panel">
+          <div class="art-noise"></div>
+          <div class="art-rune">✦</div>
+          <div class="art-copy"><span>THE GATES OPEN</span><strong id="art-boss">ASHAVA</strong></div>
+          <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+        </div>
+      </section>
+
+      <section class="timeline-section">
+        <div class="section-heading"><div><div class="section-kicker">UPCOMING ROTATION</div><h2>接下来几次刷新</h2></div><span class="data-note">规则参考 <a href="https://www.d2core.com/" target="_blank" rel="noreferrer">暗黑核</a> · 可在下方调整</span></div>
+        <div class="timeline" id="timeline"></div>
+      </section>
+
+      <section class="settings-section">
+        <div class="section-heading"><div><div class="section-kicker">REMINDERS & CONNECTIONS</div><h2>提醒设置</h2></div><span class="data-note" id="save-state">配置保存在本机</span></div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <div class="card-title-row"><div><h3>本机提醒</h3><p>即使窗口隐藏到托盘，也会在系统右下角提示。</p></div><label class="switch"><input type="checkbox" id="reminders-enabled"><span></span></label></div>
+            <div class="check-row"><label><input type="checkbox" id="notify-30"><span>提前 30 分钟</span></label><label><input type="checkbox" id="notify-15"><span>提前 15 分钟</span></label></div>
+            <label class="startup-row"><input type="checkbox" id="launch-at-login"><span>Windows 登录时自动启动并驻留托盘</span></label>
+            <button class="secondary-button" id="test-button">发送一条测试提醒</button>
+          </div>
+          <div class="settings-card">
+            <div class="card-title-row"><div><h3>微信 / QQ 通知</h3><p>填入机器人 Webhook 后，提醒会同步发送到对应群聊。</p></div><span class="config-badge" id="webhook-badge">未配置</span></div>
+            <label class="field-label">企业微信机器人 Webhook<input type="url" id="wecom-webhook" placeholder="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?..." /></label>
+            <label class="field-label">QQ 机器人 Webhook<input type="url" id="qq-webhook" placeholder="http://127.0.0.1:3000/send_msg" /></label>
+            <div class="connection-hint">QQ 可使用支持 HTTP Webhook 的机器人框架；微信使用企业微信群机器人地址。</div>
+          </div>
+        </div>
+        <div class="schedule-editor">
+          <div><div class="section-kicker">SCHEDULE ANCHOR</div><h3>刷新计划起点</h3><p>国际服不同地区可能存在时间差。调整起点后，应用会按固定间隔推算后续 Boss。</p></div>
+          <div class="editor-controls"><label class="field-label compact">起点日期与时间<input type="datetime-local" id="anchor-input" /></label><label class="field-label compact">间隔（小时）<input type="number" id="interval-input" min="1" max="12" step="0.5" /></label><button class="primary-button" id="save-button">保存计划</button></div>
+        </div>
+      </section>
+    </main>
+    <footer><span>Sanctuary Watch · Diablo IV International</span><span>窗口关闭后继续在系统托盘运行</span></footer>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>
