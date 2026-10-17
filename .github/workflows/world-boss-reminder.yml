@@ -3,7 +3,7 @@ name: World Boss Reminder
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0,5,10,15,20,25,30,35,40,45,50,55 * * * *"
+    - cron: '*/5 * * * *'
 
 permissions:
   contents: read
@@ -18,5 +18,27 @@ jobs:
       PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-      - name: Send world boss reminder
-        run: node scripts/notify.mjs
+      - name: Check reminder window
+        id: check
+        run: node scripts/check-reminder.mjs
+      - name: Restore sent marker
+        id: sent
+        uses: actions/cache/restore@v4
+        with:
+          path: .reminder-cache
+          key: world-boss-${{ steps.check.outputs.reminder_key }}
+      - name: Send PushPlus message
+        if: steps.check.outputs.should_send == 'true' && steps.sent.outputs.cache-hit != 'true'
+        env:
+          REMINDER_MESSAGE: ${{ steps.check.outputs.message }}
+        run: node scripts/send-pushplus.mjs
+      - name: Write sent marker
+        if: steps.check.outputs.should_send == 'true' && steps.sent.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force .reminder-cache | Out-Null; Set-Content .reminder-cache/sent.txt '${{ steps.check.outputs.reminder_key }}'
+      - name: Save sent marker
+        if: steps.check.outputs.should_send == 'true' && steps.sent.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .reminder-cache
+          key: world-boss-${{ steps.check.outputs.reminder_key }}
