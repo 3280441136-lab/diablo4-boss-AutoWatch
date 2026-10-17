@@ -1,0 +1,22 @@
+name: World Boss Reminder
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      BOSS_ANCHOR: ${{ vars.BOSS_ANCHOR }}
+      BOSS_INTERVAL_HOURS: ${{ vars.BOSS_INTERVAL_HOURS }}
+      PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Send world boss reminder
+        run: node scripts/notify.mjs
